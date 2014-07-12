@@ -1,0 +1,165 @@
+/* 
+    Version     : 1.0.3
+    Author      : Oliver THEBAULT
+    Copyright   : © Oliver THEBAULT - MIT License
+*/
+
+// VARIABLES LESS (spécifiques d'un projet à l'autre)
+// Mixins paramètres par défaut (à conserver pour tous les projet)
+@boxshadow-spread: 0px;
+@boxshadow-color: #cccccc;
+@boxshadow-spread: 0px;
+@transition-time: 500ms;
+@transition-ease: linear;
+@borderradius: 5px;
+@contenteditable-border-color: #888888;
+// Grille (fixed layout)
+@grid: 940px;
+@column: 40px;
+@gutter: @column / 2;
+@unit-grid: @column + @gutter;
+@nb-column: ceil(@grid / @unit-grid);
+@nb-unit-grid: floor(@grid / @unit-grid);
+// Couleurs
+// Tailles de texte
+// Boutons et blocs particuliers
+
+
+
+
+
+// MIXINS LESS
+// A utiliser principalement pour les propriétés CSS3 préfixées
+.box-shadow(@inset; @x; @y; @blur; @spread: @boxshadow-spread; @color: @boxshadow-color) when (@inset = inset){
+    -webkit-box-shadow: @arguments;
+    box-shadow: @arguments;
+}
+.box-shadow(@x; @y; @blur; @spread: @boxshadow-spread; @color: @boxshadow-color) when (ispixel(@x)){
+    -webkit-box-shadow: @arguments;
+    box-shadow: @arguments;
+}
+.box-shadow(@none) when (@none = none){
+    -webkit-box-shadow: @none;
+    box-shadow: @none;
+}
+.border-radius(@tl; @tr; @bl; @br){
+    -webkit-border-radius: @arguments;
+    border-radius: @arguments;
+}
+.border-radius(@tl: @borderradius){
+    -webkit-border-radius: @arguments;
+    border-radius: @arguments;
+}
+.linear-gradient(@color1, @color2){
+    background: @color1; /* Fallback */
+    background: -moz-linear-gradient(@color1, @color2);
+    background: -ms-linear-gradient(@color1, @color2);
+    background: -o-linear-gradient(@color1, @color2);
+    background: -webkit-linear-gradient(@color1, @color2);
+    background: linear-gradient(@color1, @color2);
+}
+.linear-gradient(@position, @color1, @color2){
+    background: @color1; /* Fallback */
+    background: -moz-linear-gradient(@position, @color1, @color2);
+    background: -ms-linear-gradient(@position, @color1, @color2);
+    background: -o-linear-gradient(@position, @color1, @color2);
+    background: -webkit-linear-gradient(@position, @color1, @color2);
+    background: linear-gradient(to @position, @color1, @color2);
+}
+.transition(@property; @time: @transition-time; @ease: @transition-ease){
+    -webkit-transition: @arguments;
+    transition: @arguments;
+}
+.opacity(@value){
+    @ie-value: @value*100;
+    zoom: 1; // Déclenche hasLayout pour ie5-7
+    filter: alpha(opacity=@ie-value); // Opacity pour ie5-9
+    opacity: @value;
+}
+.placeholder-color(@color){
+    // Chrome + Safari + Opera
+    ::-webkit-input-placeholder {
+        color: @color;
+        opacity: 1;
+        .border-radius(@borderradius);
+    }
+    // Mozilla Firefox 4-18
+    :-moz-placeholder {
+        color: @color;
+        opacity: 1;
+    }
+    // Mozilla Firefox 19+
+    ::-moz-placeholder {
+        color: @color;
+        opacity: 1;
+    }
+    // Internet Explorer 10+
+    :-ms-input-placeholder {
+        color: @color;
+        opacity: 1;
+    }
+}
+.letterspacing-photoshop-to-css(@photoshop-letterspacing){
+    letter-spacing: (@photoshop-letterspacing / 1000em);
+}
+.hardware-acceleration{
+    // Activation de l'accélération matérielle
+    -webkit-transform: translateZ(0);
+    -moz-transform: translateZ(0);
+    -ms-transform: translateZ(0);
+    -o-transform: translateZ(0);
+    transform: translateZ(0);
+}
+.antialiased{
+    // Correction de l'aliasing des polices quand l'accélération matérielle est activée
+    -webkit-font-smoothing: antialiased;
+}
+.image-unselectable{
+    // A appliquer sur le container des images
+    // qui ne doivent pas être sélectionnables
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+    &::-moz-selection{
+        background-color: transparent;
+    }
+    &::selection{
+        background-color: transparent;
+    }
+    img{
+        pointer-events: none;
+    }
+}
+.link-remove-focus{
+    &:focus, &:active{
+        text-decoration: inherit;
+        border: 0 solid black;
+        outline: 0 none;
+        color: inherit;
+    }
+}
+.fix-image-change-opacity-on-hover{
+    // Fix à placer sur les images qui se décalent au hover
+    // Attention, backface-visibility:hidden provoque la disparition des images lors d'une transition de page sur iPhone
+    -webkit-backface-visibility:hidden;
+    -moz-backface-visibility:hidden;
+    -ms-backface-visibility:hidden;
+    backface-visibility:hidden;
+}
+.contenteditable-hover{
+    [contenteditable]:hover:not(:focus) {
+        outline: 1px dotted @contenteditable-border-color;
+    }
+}
+.remove-focus-outline{
+    // Par défaut, Chrome génère une bordure bleu autour des input/textarea focus
+    // ça peut-être gênant dans le cas où les input ont un border-radius
+    &:focus{
+        outline: none;
+    }
+}
+.clearfloat{
+    clear: both;
+}
